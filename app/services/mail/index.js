@@ -13,15 +13,15 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const otpMail = async (email, data) => {
+const announcementMail = async (email,dataUser) => {
   try {
     let template = fs.readFileSync('app/views/email/otp.html', 'utf8');
 
     let message = {
       from: gmail,
       to: email,
-      subject: 'Otp for registration is: ',
-      html: Mustache.render(template, data),
+      subject: 'Congratss : ',
+      html: Mustache.render(template,dataUser),
     };
 
     return await transporter.sendMail(message);
@@ -30,4 +30,4 @@ const otpMail = async (email, data) => {
   }
 };
 
-module.exports = { otpMail };
+module.exports = { announcementMail };

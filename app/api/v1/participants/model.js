@@ -26,13 +26,9 @@ const participantSchema = new mongoose.Schema(
       type: String,
       default: '-',
     },
-    status: {
-      type: String,
-      enum: ['aktif', 'tidak aktif'],
-      default: 'tidak aktif',
-    },
-    otp: {
-      type: String,
+    image: {
+      type: mongoose.Types.ObjectId,
+      ref: 'Image',
       required: true,
     },
   },
