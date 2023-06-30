@@ -1,6 +1,5 @@
 const Participant = require('../../api/v1/participants/model');
 
-
 const {
   BadRequestError,
   NotFoundError,
@@ -16,6 +15,8 @@ const { checkingImage } = require('./images');
 const signupParticipant = async (req) => {
   const { firstName, lastName, email, password, role,image } = req.body;
 
+  
+
   let result = await Participant.findOne({
     email
   });
@@ -30,6 +31,8 @@ const signupParticipant = async (req) => {
   })
 
   await checkingImage(image)
+
+
 
   await announcementMail(email,result)
 
@@ -49,14 +52,14 @@ const signinParticipant = async (req) => {
     throw new BadRequestError('Please provide email and password');
   }
 
-  const result = await Participant.findOne({ email: email });
+  const result = await Participant.findOne({ email: email })
+  .populate({ path: 'image', select: '_id name' })
+  .populate({ path: '_id', select: 'id' });
+
+
 
   if (!result) {
     throw new UnauthorizedError('Invalid Credentials');
-  }
-
-  if (result.status === 'tidak aktif') {
-    throw new UnauthorizedError('Akun anda belum aktif');
   }
 
   const isPasswordCorrect = await result.comparePassword(password);
@@ -67,7 +70,8 @@ const signinParticipant = async (req) => {
 
   const token = createJWT({ payload: createTokenParticipant(result) });
 
-  return token;
+
+  return { token, role: result.role, firstName: result.firstName,profile:result.image?.name,participantsId: result.id};
 };
 
 

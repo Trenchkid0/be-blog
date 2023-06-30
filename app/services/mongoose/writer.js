@@ -6,7 +6,14 @@ const { BadRequestError, NotFoundError } = require('../../errors');
 const { checkingImage } = require('./images');
 
 const getAllWriter = async (req) => {
-  const result = await Writer.find({});
+  const result = await Writer.find({})
+  .populate({ path: 'image', select: '_id name' })
+  .populate({ 
+    path: 'participant', 
+    select: '_id firstName role image',
+    populate: { path: 'image', select: '_id  name' },
+  })
+
 
   return result;
 };
@@ -21,12 +28,13 @@ const createBlog = async (req) => {
     content,
   } = req.body;
 
-  await checkingImage(image);
-
-
+  console.log(req.participant);
+ 
   const check = await Writer.findOne({ title });
 
   if (check) throw new BadRequestError('judul acara sudah terdaftar');
+
+  
 
   const result = await Writer.create({
     image,
@@ -38,27 +46,34 @@ const createBlog = async (req) => {
     participant: req.participant.id,
   });
 
-  return result;
-};
-
-const getWrittenByParticipant = async (req) => {
-  const { participant } = req.params;
-
-  const result = await Writer.find({ participant: participant });
+  await checkingImage(image);
 
   return result;
 };
+
+// const getWrittenByParticipant = async (req) => {
+//   const { participant } = req.params;
+//   console.log(req.participant.id)
+
+//   const result = await Writer.findOne({
+//     participant: participant,
+//   })
+    
+//   if (!result) throw new NotFoundError(`Tidak ada blog dengan id :  ${id}`);
+
+//   return result;
+// };
 
 const getOneWritten = async (req) => {
-  const { id } = req.params;
-  console.log(req.participant.id)
+  const { participants } = req.params;
+  // console.log(req.participant.id)
 
   const result = await Writer.findOne({
-    _id: id,
+    participant: participants,
   })
 
 
-  if (!result) throw new NotFoundError(`Tidak ada acara dengan id :  ${id}`);
+  if (!result) throw new NotFoundError(`Tidak ada dengan id :  ${id}`);
 
   return result;
 };
@@ -81,100 +96,13 @@ const getOneParticipant = async (req) => {
 
   return result;
 };
-// const createCategories = async (req) => {
-//   const { name } = req.body;
-
-//   // cari categories dengan field name
-//   const check = await Categories.findOne({
-//     name,
-//     organizer: req.user.organizer,
-//   });
-
-//   // apa bila check true / data categories sudah ada maka kita tampilkan error bad request dengan message kategori nama duplikat
-//   if (check) throw new BadRequestError('kategori nama duplikat');
-
-//   const result = await Categories.create({
-//     name,
-//     organizer: req.user.organizer,
-//   });
-
-//   return result;
-// };
-
-// const getOneCategories = async (req) => {
-//   const { id } = req.params;
-
-//   const result = await Categories.findOne({
-//     _id: id,
-//     organizer: req.user.organizer,
-//   });
-
-//   if (!result) throw new NotFoundError(`Tidak ada Kategori dengan id :  ${id}`);
-
-//   return result;
-// };
-
-// const updateCategories = async (req) => {
-//   const { id } = req.params;
-//   const { name } = req.body;
-
-//   // cari categories dengan field name dan id selain dari yang dikirim dari params
-//   const check = await Categories.findOne({
-//     name,
-//     organizer: req.user.organizer,
-//     _id: { $ne: id },
-//   });
-
-//   // apa bila check true / data categories sudah ada maka kita tampilkan error bad request dengan message kategori nama duplikat
-//   if (check) throw new BadRequestError('kategori nama duplikat');
-
-//   const result = await Categories.findOneAndUpdate(
-//     { _id: id },
-//     { name },
-//     { new: true, runValidators: true }
-//   );
-
-//   // jika id result false / null maka akan menampilkan error `Tidak ada Kategori dengan id` yang dikirim client
-//   if (!result) throw new NotFoundError(`Tidak ada Kategori dengan id :  ${id}`);
-
-//   return result;
-// };
-
-// const deleteCategories = async (req) => {
-//   const { id } = req.params;
-
-//   const result = await Categories.findOne({
-//     _id: id,
-//     organizer: req.user.organizer,
-//   });
-
-//   if (!result) throw new NotFoundError(`Tidak ada Kategori dengan id :  ${id}`);
-
-//   await result.remove();
-
-//   return result;
-// };
-
-// const checkingCategories = async (id) => {
-//   const result = await Categories.findOne({
-//     _id: id,
-//   });
-
-//   if (!result) throw new NotFoundError(`Tidak ada Kategori dengan id :  ${id}`);
-
-//   return result;
-// };
 
 module.exports = {
   getAllWriter,
   createBlog,
-  getWrittenByParticipant,
+  // getWrittenByParticipant,
   getOneWritten,
   getAllParticipant,
   getOneParticipant,
-  // createCategories,
-  // getOneCategories,
-  // updateCategories,
-  // deleteCategories,
-  // checkingCategories,
+
 };

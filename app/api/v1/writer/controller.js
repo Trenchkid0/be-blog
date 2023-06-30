@@ -3,13 +3,10 @@ const { StatusCodes } = require('http-status-codes');
 const {
   getAllWriter,
   createBlog,
-  getWrittenByParticipant,
+  // getWrittenByParticipant,
   getOneWritten,
   getAllParticipant,
   getOneParticipant,
-  // getOneCategories,
-  // updateCategories,
-  // deleteCategories,
 } = require('../../../services/mongoose/writer');
 
 const create = async (req, res, next) => {
@@ -48,17 +45,6 @@ const index = async (req, res, next) =>{
   }
 }
 
-const getBlogByParticipant = async (req, res, next) =>{
-  try {
-    const result = await getWrittenByParticipant(req);
-
-    res.status(StatusCodes.OK).json({
-      data: result,
-    });
-  } catch (err) {
-    next(err);
-  }
-}
 
 const getWrittenByid = async (req, res, next) =>{
   try {
@@ -86,50 +72,11 @@ const getOneParticipants = async(req, res, next) => {
 
 
 
-// const find = async (req, res, next) => {
-//   try {
-//     const result = await getOneCategories(req);
-
-//     res.status(StatusCodes.OK).json({
-//       data: result,
-//     });
-//   } catch (err) {
-//     next(err);
-//   }
-// };
-
-// const update = async (req, res, next) => {
-//   try {
-//     const result = await updateCategories(req);
-
-//     res.status(StatusCodes.OK).json({
-//       data: result,
-//     });
-//   } catch (err) {
-//     next(err);
-//   }
-// };
-
-// const destroy = async (req, res, next) => {
-//   try {
-//     const result = await deleteCategories(req);
-//     res.status(StatusCodes.OK).json({
-//       data: result,
-//     });
-//   } catch (err) {
-//     next(err);
-//   }
-// };
-
 module.exports = {
   index,
   create,
-  getBlogByParticipant,
+  // getBlogByParticipant,
   getWrittenByid,
   getAllParticipants,
   getOneParticipants,
-  // find,
-  // update,
-  // destroy,
-  // create,
 };
