@@ -1,4 +1,4 @@
-const { UnauthenticatedError, UnauthorizedError } = require('../errors');
+const { UnauthenticatedError} = require('../errors');
 const { isTokenValid } = require('../utils/jwt');
 
 
@@ -12,13 +12,15 @@ const authenticateParticipant = async (req, res, next) => {
       token = authHeader.split(' ')[1];
     }
 
+    console.log(token);
+
     if (!token) {
       throw new UnauthenticatedError('Authentication invalid');
     }
 
     const payload = isTokenValid({ token });
-    console.log(payload.email)
-    // Attach the user and his permissions to the req object
+
+
     req.participant = {
       email: payload.email,
       lastName: payload.lastName,

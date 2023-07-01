@@ -1,5 +1,4 @@
 const createTokenParticipant = (participant) => {
-  // console.log(participant.id)
   
   return {
     lastName: participant.lastName,

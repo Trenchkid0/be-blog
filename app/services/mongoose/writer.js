@@ -28,11 +28,12 @@ const createBlog = async (req) => {
     content,
   } = req.body;
 
-  console.log(req.participant);
  
   const check = await Writer.findOne({ title });
 
   if (check) throw new BadRequestError('judul acara sudah terdaftar');
+
+  console.log(req.participant)
 
   
 

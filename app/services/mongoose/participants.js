@@ -71,7 +71,12 @@ const signinParticipant = async (req) => {
   const token = createJWT({ payload: createTokenParticipant(result) });
 
 
-  return { token, role: result.role, firstName: result.firstName,profile:result.image?.name,participantsId: result.id};
+  return { token,
+    role: result.role, 
+    firstName: result.firstName,
+    profile:result.image?.name,
+    participantsId: result.id
+  };
 };
 
 
@@ -82,6 +87,4 @@ const signinParticipant = async (req) => {
 module.exports = {
   signupParticipant,
   signinParticipant,
-
-
 };
