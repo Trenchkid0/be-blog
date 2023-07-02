@@ -14,10 +14,6 @@ let writerSchema = Schema(
       maxLength: [25, 'Panjang nama kategori maksimal 90 karakter'],
       required: [true, 'Nama kategori harus diisi'],
     },
-    date: {
-      type: Date,
-      required: [true, 'Tanggal dan waktu harus diisi'],
-    },
     title:{
       type: String,
       minlength: [3, 'Panjang nama kategori minimal 3 karakter'],

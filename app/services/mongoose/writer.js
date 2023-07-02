@@ -33,7 +33,6 @@ const createBlog = async (req) => {
 
   if (check) throw new BadRequestError('judul acara sudah terdaftar');
 
-  console.log(req.participant)
 
   
 
@@ -52,25 +51,19 @@ const createBlog = async (req) => {
   return result;
 };
 
-// const getWrittenByParticipant = async (req) => {
-//   const { participant } = req.params;
-//   console.log(req.participant.id)
-
-//   const result = await Writer.findOne({
-//     participant: participant,
-//   })
-    
-//   if (!result) throw new NotFoundError(`Tidak ada blog dengan id :  ${id}`);
-
-//   return result;
-// };
 
 const getOneWritten = async (req) => {
   const { participants } = req.params;
-  // console.log(req.participant.id)
 
-  const result = await Writer.findOne({
+  const result = await Writer.find({
     participant: participants,
+  })
+
+  .populate({ path: 'image', select: '_id name' })
+  .populate({ 
+    path: 'participant', 
+    select: '_id firstName role image',
+    populate: { path: 'image', select: '_id  name' },
   })
 
 
