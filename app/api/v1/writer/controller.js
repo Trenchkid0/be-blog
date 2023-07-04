@@ -3,8 +3,8 @@ const { StatusCodes } = require('http-status-codes');
 const {
   getAllWriter,
   createBlog,
-  // getWrittenByParticipant,
-  getOneWritten,
+  getOneWrittenById,
+  getOneWrittenByParticipant,
   getAllParticipant,
   getOneParticipant,
 } = require('../../../services/mongoose/writer');
@@ -46,9 +46,21 @@ const index = async (req, res, next) =>{
 }
 
 
-const getWrittenByid = async (req, res, next) =>{
+const getWrittenByParticipant = async (req, res, next) =>{
   try {
-    const result = await getOneWritten(req);
+    const result = await getOneWrittenByParticipant(req);
+
+    res.status(StatusCodes.OK).json({
+      data: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+const getWrittenByIdParticipant = async (req, res, next) =>{
+  try {
+    const result = await getOneWrittenById(req);
 
     res.status(StatusCodes.OK).json({
       data: result,
@@ -72,11 +84,12 @@ const getOneParticipants = async(req, res, next) => {
 
 
 
+
 module.exports = {
   index,
   create,
-  // getBlogByParticipant,
-  getWrittenByid,
+  getWrittenByIdParticipant,
+  getWrittenByParticipant,
   getAllParticipants,
   getOneParticipants,
 };

@@ -52,11 +52,31 @@ const createBlog = async (req) => {
 };
 
 
-const getOneWritten = async (req) => {
+const getOneWrittenByParticipant = async (req) => {
   const { participants } = req.params;
 
   const result = await Writer.find({
     participant: participants,
+  })
+
+  .populate({ path: 'image', select: '_id name' })
+  .populate({ 
+    path: 'participant', 
+    select: '_id firstName role image',
+    populate: { path: 'image', select: '_id  name' },
+  })
+
+
+  if (!result) throw new NotFoundError(`Tidak ada dengan id :  ${id}`);
+
+  return result;
+};
+
+const getOneWrittenById = async (req) => {
+  const { id } = req.params;
+
+  const result = await Writer.find ({
+    _id: id,
   })
 
   .populate({ path: 'image', select: '_id name' })
@@ -94,8 +114,8 @@ const getOneParticipant = async (req) => {
 module.exports = {
   getAllWriter,
   createBlog,
-  // getWrittenByParticipant,
-  getOneWritten,
+  getOneWrittenById,
+  getOneWrittenByParticipant,
   getAllParticipant,
   getOneParticipant,
 

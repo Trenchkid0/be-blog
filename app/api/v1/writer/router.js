@@ -2,16 +2,15 @@ const express = require('express');
 const router = express();
 const { create,
    index, 
-  //  getBlogByParticipant, 
-   getWrittenByid,getAllParticipants,getOneParticipants } = require('./controller');
+   getWrittenByIdParticipant, 
+  getWrittenByParticipant,getAllParticipants,getOneParticipants } = require('./controller');
 const {
-    authenticateUser,
-    authorizeRoles,
     authenticateParticipant,
   } = require('../../../middlewares/auth');
 
 router.get('/writer',index);
-router.get('/writer/:participants',authenticateParticipant,getWrittenByid); 
+// router.get('/writer/:participants',authenticateParticipant,getWrittenByParticipant); 
+router.get('/writer/:id',getWrittenByIdParticipant);
 router.post('/writer',authenticateParticipant,create);
 // router.get('/writer/:participant',authenticateParticipant,getBlogByParticipant);
 router.get('/participants', getAllParticipants);
