@@ -4,7 +4,7 @@ const {
   getAllWriter,
   createBlog,
   getOneWrittenById,
-  getOneWrittenByParticipant,
+  deleteBlog,
   getAllParticipant,
   getOneParticipant,
 } = require('../../../services/mongoose/writer');
@@ -46,17 +46,6 @@ const index = async (req, res, next) =>{
 }
 
 
-const getWrittenByParticipant = async (req, res, next) =>{
-  try {
-    const result = await getOneWrittenByParticipant(req);
-
-    res.status(StatusCodes.OK).json({
-      data: result,
-    });
-  } catch (err) {
-    next(err);
-  }
-}
 
 const getWrittenByIdParticipant = async (req, res, next) =>{
   try {
@@ -82,6 +71,20 @@ const getOneParticipants = async(req, res, next) => {
   }
 }
 
+const deleteOneBlog = async(req, res, next) => {
+  try {
+    const result = await deleteBlog(req);
+
+    res.status(StatusCodes.CREATED).json({
+      data: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+
+
 
 
 
@@ -89,7 +92,7 @@ module.exports = {
   index,
   create,
   getWrittenByIdParticipant,
-  getWrittenByParticipant,
   getAllParticipants,
   getOneParticipants,
+  deleteOneBlog,
 };

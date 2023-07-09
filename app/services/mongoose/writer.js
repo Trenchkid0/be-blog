@@ -6,7 +6,16 @@ const { BadRequestError, NotFoundError } = require('../../errors');
 const { checkingImage } = require('./images');
 
 const getAllWriter = async (req) => {
-  const result = await Writer.find({})
+  console.log(req.query)
+  const {keyword} = req.query;
+  let condition = {};
+
+
+  if (keyword) {
+    condition = {...condition, title: { $regex: keyword, $options: 'i' } };
+  }
+
+  const result = await Writer.find(condition)
   .populate({ path: 'image', select: '_id name' })
   .populate({ 
     path: 'participant', 
@@ -52,25 +61,7 @@ const createBlog = async (req) => {
 };
 
 
-const getOneWrittenByParticipant = async (req) => {
-  const { participants } = req.params;
 
-  const result = await Writer.find({
-    participant: participants,
-  })
-
-  .populate({ path: 'image', select: '_id name' })
-  .populate({ 
-    path: 'participant', 
-    select: '_id firstName role image',
-    populate: { path: 'image', select: '_id  name' },
-  })
-
-
-  if (!result) throw new NotFoundError(`Tidak ada dengan id :  ${id}`);
-
-  return result;
-};
 
 const getOneWrittenById = async (req) => {
   const { id } = req.params;
@@ -111,12 +102,26 @@ const getOneParticipant = async (req) => {
   return result;
 };
 
+const deleteBlog = async (req) => {
+  const { id } = req.params;
+
+  const result = await Writer.findOne({
+    _id: id,
+    participant: req.participant.id,
+  });
+
+  if (!result) throw new NotFoundError(`Tidak ada Kategori dengan id :  ${id}`);
+
+  await result.remove();
+
+  return result;
+};
+
 module.exports = {
   getAllWriter,
   createBlog,
   getOneWrittenById,
-  getOneWrittenByParticipant,
   getAllParticipant,
   getOneParticipant,
-
+  deleteBlog,
 };

@@ -17,7 +17,7 @@ let writerSchema = Schema(
     title:{
       type: String,
       minlength: [3, 'Panjang nama kategori minimal 3 karakter'],
-      maxLength: [90, 'Panjang nama kategori maksimal 90 karakter'],
+      maxLength: [30, 'Panjang nama kategori maksimal 90 karakter'],
       required: [true, 'Nama kategori harus diisi'],
     },
     deskripsi:{
