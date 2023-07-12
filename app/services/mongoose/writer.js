@@ -1,6 +1,8 @@
 const Writer = require('../../api/v1/writer/model');
 const Participant = require('../../api/v1/participants/model');
 
+const bcrypt = require('bcryptjs');
+
 const { BadRequestError, NotFoundError } = require('../../errors');
 
 const { checkingImage } = require('./images');
@@ -85,6 +87,7 @@ const getOneWrittenById = async (req) => {
 
 const getAllParticipant = async (req) => {
   const result = await Participant.find({})
+  .populate({ path: 'image', select: '_id name' });
   
 
   if (!result) throw new NotFoundError(`Tidak ada acara dengan id :  ${id}`);
@@ -95,7 +98,8 @@ const getAllParticipant = async (req) => {
 
 const getOneParticipant = async (req) => {
   const { id } = req.params;
-  const result = await Participant.findOne({ _id: id })
+  const result = await Participant.find({ _id: id })
+  .populate({ path: 'image', select: '_id name' })
 
   if (!result) throw new NotFoundError(`Tidak ada acara dengan id :  ${id}`);
 
@@ -117,6 +121,44 @@ const deleteBlog = async (req) => {
   return result;
 };
 
+const updateProfileParticipant = async (req) => {
+  const { id } = req.params;
+  const { firstName, lastName, email,role,image } = req.body;
+
+  
+
+  // await checkingImage(image);
+
+
+  const check = await Participant.findOne({
+    email,
+    firstName,
+    lastName,
+    participant: req.participant.id,
+    _id: { $ne: id },
+  });
+
+
+  if (check) throw new BadRequestError('pembicara sudah terdaftar');
+
+  
+
+  const result = await Participant.findOneAndUpdate(
+    { _id: id },
+    { firstName, lastName, email, role,image , participant: req.participant.id},
+    { new: true, runValidators: true }
+  );
+
+
+  if (!result)
+    throw new NotFoundError(`Tidak ada user dengan id :  ${id}`);
+
+  return result;
+};
+
+
+
+
 module.exports = {
   getAllWriter,
   createBlog,
@@ -124,4 +166,5 @@ module.exports = {
   getAllParticipant,
   getOneParticipant,
   deleteBlog,
+  updateProfileParticipant,
 };

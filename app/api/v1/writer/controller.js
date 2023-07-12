@@ -7,6 +7,7 @@ const {
   deleteBlog,
   getAllParticipant,
   getOneParticipant,
+  updateProfileParticipant,
 } = require('../../../services/mongoose/writer');
 
 const create = async (req, res, next) => {
@@ -83,6 +84,21 @@ const deleteOneBlog = async(req, res, next) => {
   }
 }
 
+const updateParticipant = async(req, res, next) => {
+  try {
+    const result = await updateProfileParticipant(req);
+
+    res.status(StatusCodes.CREATED).json({
+      data: result,
+    });
+  } catch (err) {
+    next(err);
+  }
+}
+
+
+
+
 
 
 
@@ -95,4 +111,5 @@ module.exports = {
   getAllParticipants,
   getOneParticipants,
   deleteOneBlog,
+  updateParticipant,
 };

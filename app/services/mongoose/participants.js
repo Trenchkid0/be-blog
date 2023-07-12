@@ -32,13 +32,9 @@ const signupParticipant = async (req) => {
 
   await checkingImage(image)
 
-
-
   await announcementMail(email,result)
 
-
   delete result._doc.password;
-  delete result._doc.otp;
 
   return result;
 };
@@ -48,9 +44,12 @@ const signupParticipant = async (req) => {
 const signinParticipant = async (req) => {
   const { email, password } = req.body;
 
+  console.log(password);
+
   if (!email || !password) {
     throw new BadRequestError('Please provide email and password');
   }
+  
 
   const result = await Participant.findOne({ email: email })
   .populate({ path: 'image', select: '_id name' })
@@ -75,7 +74,7 @@ const signinParticipant = async (req) => {
     role: result.role, 
     firstName: result.firstName,
     profile:result.image?.name,
-    participantsId: result.id
+    participantsId: result.id,
   };
 };
 
