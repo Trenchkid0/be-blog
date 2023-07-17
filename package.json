@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "preinstall": "npm i nodemon -g",
+    "start": "nodemon ./bin/www",
     "dev": "nodemon ./bin/www"
   },
   "dependencies": {

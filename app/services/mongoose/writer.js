@@ -42,7 +42,7 @@ const createBlog = async (req) => {
  
   const check = await Writer.findOne({ title });
 
-  if (check) throw new BadRequestError('judul acara sudah terdaftar');
+  if (check) throw new BadRequestError('judul blog sudah terdaftar');
 
 
   
@@ -101,7 +101,7 @@ const getOneParticipant = async (req) => {
   const result = await Participant.find({ _id: id })
   .populate({ path: 'image', select: '_id name' })
 
-  if (!result) throw new NotFoundError(`Tidak ada acara dengan id :  ${id}`);
+  if (!result) throw new NotFoundError(`Tidak ada user dengan id :  ${id}`);
 
   return result;
 };
@@ -127,7 +127,6 @@ const updateProfileParticipant = async (req) => {
 
   
 
-  // await checkingImage(image);
 
 
   const check = await Participant.findOne({
